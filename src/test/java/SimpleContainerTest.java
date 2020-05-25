@@ -49,9 +49,9 @@ class SimpleContainerTest {
 
     @Test
     void shouldResolveToExtendedClassType() throws Exception {
-        container.registerType(InterfaceTest.class, TestClassExtend.class, false);
+        container.registerType(InterfaceTest.class, TestClassExtended.class, false);
         InterfaceTest testClassResolved = container.resolve(InterfaceTest.class);
-        assertSame(testClassResolved.getClass(), TestClassExtend.class);
+        assertSame(testClassResolved.getClass(), TestClassExtended.class);
     }
 
     @Test
@@ -59,7 +59,29 @@ class SimpleContainerTest {
         SimpleContainerException exception = assertThrows(SimpleContainerException.class,
                 () -> container.resolve(TestClass.class));
         assertThat(exception.getMessage(), is("TestClass is not registered"));
+    }
 
+    @Test
+    void shouldResolveInstances() throws Exception {
+        container.registerInstance("Alice has a cat");
+        String resolved = container.resolve(String.class);
+        assertThat(resolved, is("Alice has a cat"));
+    }
+
+    @Test
+    void shouldDetectCycle(){
+        container.registerType(TestClassWithCycle.class, false);
+        SimpleContainerException exception = assertThrows(SimpleContainerException.class,
+                () -> container.resolve(TestClassWithCycle.class));
+        assertThat(exception.getMessage(), is("class TestClassWithCycle cannot be resolved: " +
+                "constructor parameter and class type are identical"));
+    }
+
+    @Test
+    void shouldResolveClassWithNonEmptyConstructor() throws Exception {
+        container.registerType(TestClassWithNonEmptyConstructor.class, false);
+        container.registerType(TestClass.class, false);
+        container.resolve(TestClassWithNonEmptyConstructor.class);
     }
 
 }

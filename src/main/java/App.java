@@ -53,15 +53,13 @@ public class App {
             this.qux = qux;
             }
 
-
-        */
-
-        /*
         po odkomentowaniu Qux q = c.resolve(Qux.class);
         Exception in thread "main" exceptions.SimpleContainerException:
-        class samples.Qux cannot be resolved: constructor parameter and class type are identical */
+        class samples.Qux cannot be resolved: constructor parameter and class type are identical
+        */
+
         c.registerType(Qux.class, false);
-        Qux q = c.resolve(Qux.class);
+       // Qux q = c.resolve(Qux.class);
 
         /*
         * "W przypadku dwóch konstruktorów o tej samej, maksymalnej liczbie parametrów
