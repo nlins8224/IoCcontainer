@@ -11,9 +11,7 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class SimpleContainer {
-    //registeredTypes
     private final Map<String, Register<?>> typedRegistrations = new HashMap<>();
-    //resolvedInstances
     private final Map<String, Object> resolvedSingletonInstances = new HashMap<>();
 
     public <F> void registerInstance(F instance){
@@ -88,9 +86,12 @@ public class SimpleContainer {
                 throw new SimpleContainerException("No public constructors was found for type: " + type.getName());
             }
 
+
             List<Constructor> annotatedConstructors = Arrays.stream(declaredConstructors)
                     .filter(constructor -> constructor.getDeclaredAnnotation(DependencyConstructor.class) != null)
                     .collect(Collectors.toList());
+
+
 
             if (annotatedConstructors.isEmpty()){
                 return Arrays.stream(declaredConstructors)
@@ -109,8 +110,14 @@ public class SimpleContainer {
             Parameter[] parameterTypes = constructor.getParameters();
             Object[] parameters = new Object[parameterTypes.length];
             for (int i = 0; i < parameterTypes.length; i++){
+
                 Parameter parameter = parameterTypes[i];
-                    parameters[i] = resolve(parameter.getType());
+                if (constructor.getDeclaringClass() == parameter.getType()){
+                    throw new SimpleContainerException(constructor.getDeclaringClass() +
+                            " cannot be resolved: constructor parameter and class type " +
+                            "are identical");
+                }
+                parameters[i] = resolve(parameter.getType());
             }
             try {
                 return (T) constructor.newInstance(parameters);

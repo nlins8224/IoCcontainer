@@ -47,19 +47,21 @@ public class App {
         System.out.println(x.d); // samples.Y
 
         /*
-        "Podczas rozwikływania może dojść do sytuacji powstania cyklu w drzewie (najprostszy przypadek:
-        obiekt A w konstrukturze żąda obiektu typu A. Kontener powinen wykryć taką
-        sytuację i zaraportować ją zrozumiałym wyjątkiem."
+        "Podczas rozwikływania może dojść do sytuacji powstania cyklu w drzewie...
 
         Qux(Qux qux){
             this.qux = qux;
             }
 
-            atm: StackOverflowError
+
         */
 
-       // c.registerType(Qux.class, false);
-       // Qux q = c.resolve(Qux.class);
+        /*
+        po odkomentowaniu Qux q = c.resolve(Qux.class);
+        Exception in thread "main" exceptions.SimpleContainerException:
+        class samples.Qux cannot be resolved: constructor parameter and class type are identical */
+        c.registerType(Qux.class, false);
+        Qux q = c.resolve(Qux.class);
 
         /*
         * "W przypadku dwóch konstruktorów o tej samej, maksymalnej liczbie parametrów
