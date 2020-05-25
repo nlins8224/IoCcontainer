@@ -65,8 +65,26 @@ public class App {
         * "Uwaga. W przypadku dwóch konstruktorów o tej samej, maksymalnej liczbie parametrów
         * można zachować się na trzy sposoby: ..."
         *
-        * W tej implementacji:
+        * W tej implementacji: Rozwikłuje napotkane konstruktory z maksymalną ilością parametrów aż do błędu
+        * lub udanego rozwikłania któregoś z nich.
         *
         *  */
+
+        c.registerType(Z.class, false);
+        Z z = c.resolve(Z.class);
+        System.out.println(z);
+        System.out.println(z.b); //samples.b
+        System.out.println(z.x); //null, bo to atrybut z innego konstruktora
+
+        /*
+        *  ...lub konstruktor oznaczony atrybutem [DependencyConstrutor],
+        *   pod warunkiem że jest tylko jeden taki...
+        * */
+
+        c.registerType(D.class, false);
+        D d = c.resolve(D.class);
+        System.out.println(d);
+        System.out.println(d.b); //null, bo
+        System.out.println(d.x); //ma adnotacje @DependencyConstructor, samples.X
     }
 }

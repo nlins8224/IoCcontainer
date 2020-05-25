@@ -1,4 +1,4 @@
-import annotations.InjectionConstructor;
+import annotations.DependencyConstructor;
 import annotations.InstanceName;
 import exceptions.SimpleContainerException;
 
@@ -91,7 +91,7 @@ public class SimpleContainer {
             }
 
             List<Constructor> annotatedConstructors = Arrays.stream(declaredConstructors)
-                    .filter(constructor -> constructor.getDeclaredAnnotation(InjectionConstructor.class) != null)
+                    .filter(constructor -> constructor.getDeclaredAnnotation(DependencyConstructor.class) != null)
                     .collect(Collectors.toList());
 
             if (annotatedConstructors.isEmpty()){
@@ -101,7 +101,7 @@ public class SimpleContainer {
 
             if (annotatedConstructors.size() > 1){
                 throw new SimpleContainerException("At most one constructor can be annotated with@"
-                        + InjectionConstructor.class.getSimpleName());
+                        + DependencyConstructor.class.getSimpleName());
             }
 
             return annotatedConstructors.get(0);
