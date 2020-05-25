@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class SimpleContainer {
+    //registeredTypes
     private final Map<String, Register<?>> typedRegistrations = new HashMap<>();
+    //resolvedInstances
     private final Map<String, Object> resolvedSingletonInstances = new HashMap<>();
 
     public synchronized <F> void registerInstance(F instance){

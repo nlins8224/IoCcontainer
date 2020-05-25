@@ -1,5 +1,5 @@
 package samples;
 
-public class Foo implements samples.IFoo {
+public class Foo implements IFoo {
 
 }

@@ -1,5 +1,5 @@
 package samples;
 
-public class Bar extends samples.Foo {
+public class Bar extends Foo {
 
 }
