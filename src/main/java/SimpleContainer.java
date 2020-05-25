@@ -1,5 +1,4 @@
 import annotations.DependencyConstructor;
-import annotations.InstanceName;
 import exceptions.SimpleContainerException;
 
 import java.lang.reflect.Constructor;
@@ -17,24 +16,24 @@ public class SimpleContainer {
     //resolvedInstances
     private final Map<String, Object> resolvedSingletonInstances = new HashMap<>();
 
-    public synchronized <F> void registerInstance(F instance){
+    public <F> void registerInstance(F instance){
         typedRegistrations.put(instance.getClass().getName(),
                 new Register.TypeInstanceRegister<>((Class<F>) instance.getClass(), instance));
     }
 
-    public synchronized <F> void registerType(Class<F> type, boolean isSingleton){
+    public <F> void registerType(Class<F> type, boolean isSingleton){
         this.typedRegistrations.put(type.getName(), new Register.TypeRegisterOne<>(type, isSingleton));
     }
 
-    public synchronized <F, T extends F> void registerType(Class<F> from, Class<T> to, boolean isSingleton){
+    public <F, T extends F> void registerType(Class<F> from, Class<T> to, boolean isSingleton){
         this.typedRegistrations.put(from.getName(), new Register.TypeRegister<>(from, to, isSingleton));
     }
 
-    public synchronized <T> T resolve(Class<T> type) throws Exception {
+    public <T> T resolve(Class<T> type) throws Exception {
        return resolve(type.getName());
     }
 
-    public synchronized <T> T resolve(String name) throws Exception {
+    public <T> T resolve(String name) throws Exception {
         Register<?> register = typedRegistrations.get(name);
 
         if (register == null) {
@@ -78,9 +77,8 @@ public class SimpleContainer {
         }
         else if (register instanceof Register.TypeInstanceRegister) {
             return (T) ((Register.TypeInstanceRegister) register).instance;
-        } else if (register instanceof Register.NamedInstanceRegister) {
-            return (T) ((Register.NamedInstanceRegister) register).instance;
-        } else {
+        }
+        else {
             throw new SimpleContainerException("Cannot provide registration for type: " + register.getClass().getName());
         }
     }
@@ -112,13 +110,7 @@ public class SimpleContainer {
             Object[] parameters = new Object[parameterTypes.length];
             for (int i = 0; i < parameterTypes.length; i++){
                 Parameter parameter = parameterTypes[i];
-                InstanceName instanceNameAnnotation = parameter.getDeclaredAnnotation(InstanceName.class);
-
-                if (instanceNameAnnotation != null) {
-                    parameters[i] = resolve(instanceNameAnnotation.value());
-                } else {
                     parameters[i] = resolve(parameter.getType());
-                }
             }
             try {
                 return (T) constructor.newInstance(parameters);

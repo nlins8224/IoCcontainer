@@ -41,13 +41,13 @@ public class App {
 
         c.registerInstance( "ala ma kota" );
         X x = c.resolve(X.class);
-        System.out.println(x);
+        System.out.println(x); // samples.X
 
         System.out.println(x.s); // ala ma kota
         System.out.println(x.d); // samples.Y
 
         /*
-        "Uwaga. Podczas rozwikływania może dojść do sytuacji powstania cyklu w drzewie (najprostszy przypadek:
+        "Podczas rozwikływania może dojść do sytuacji powstania cyklu w drzewie (najprostszy przypadek:
         obiekt A w konstrukturze żąda obiektu typu A. Kontener powinen wykryć taką
         sytuację i zaraportować ją zrozumiałym wyjątkiem."
 
@@ -62,7 +62,7 @@ public class App {
        // Qux q = c.resolve(Qux.class);
 
         /*
-        * "Uwaga. W przypadku dwóch konstruktorów o tej samej, maksymalnej liczbie parametrów
+        * "W przypadku dwóch konstruktorów o tej samej, maksymalnej liczbie parametrów
         * można zachować się na trzy sposoby: ..."
         *
         * W tej implementacji: Rozwikłuje napotkane konstruktory z maksymalną ilością parametrów aż do błędu
@@ -72,8 +72,8 @@ public class App {
 
         c.registerType(Z.class, false);
         Z z = c.resolve(Z.class);
-        System.out.println(z);
-        System.out.println(z.b); //samples.b
+        System.out.println(z);   //samples.Z
+        System.out.println(z.b); //samples.B
         System.out.println(z.x); //null, bo to atrybut z innego konstruktora
 
         /*
@@ -83,8 +83,8 @@ public class App {
 
         c.registerType(D.class, false);
         D d = c.resolve(D.class);
-        System.out.println(d);
+        System.out.println(d);   //samples.D
         System.out.println(d.b); //null, bo
-        System.out.println(d.x); //ma adnotacje @DependencyConstructor, samples.X
+        System.out.println(d.x); //ma adnotację @DependencyConstructor, samples.X
     }
 }

@@ -34,16 +34,5 @@ class Register<F> {
         }
     }
 
-    static class NamedInstanceRegister<F> extends Register<F> {
-        final String name;
-        final F instance;
-
-        public NamedInstanceRegister(Class<F> from, String name, F instance) {
-            super(from);
-            this.name = name;
-            this.instance = instance;
-        }
-    }
-
 }
 
