@@ -2,7 +2,6 @@ import annotations.InjectionConstructor;
 import annotations.InstanceName;
 import exceptions.SimpleContainerException;
 
-import java.awt.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
@@ -13,13 +12,13 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class SimpleContainer {
-    private static Container INSTANCE;
+    private static SimpleContainer INSTANCE;
     private final Map<String, Register<?>> typedRegistrations = new HashMap<>();
     private final Map<String, Object> resolvedSingletonInstances = new HashMap<>();
 
-    public synchronized static Container getINSTANCE(){
+    public synchronized static SimpleContainer getINSTANCE(){
         if (INSTANCE == null){
-            INSTANCE = new Container();
+            INSTANCE = new SimpleContainer();
         }
         return INSTANCE;
     }
@@ -45,7 +44,7 @@ public class SimpleContainer {
         Register<?> register = typedRegistrations.get(name);
 
         if (register == null) {
-            throw new SimpleContainerException("Interface is not registered");
+            throw new SimpleContainerException(name + " is not registered");
         }
 
         if (register instanceof Register.TypeRegister) {
@@ -117,7 +116,7 @@ public class SimpleContainer {
         private <T> T createInstance(Constructor constructor) throws Exception {
             Parameter[] parameterTypes = constructor.getParameters();
             Object[] parameters = new Object[parameterTypes.length];
-            for (int i = 0; i < parameterTypes.length; i++){ //for each
+            for (int i = 0; i < parameterTypes.length; i++){
                 Parameter parameter = parameterTypes[i];
                 InstanceName instanceNameAnnotation = parameter.getDeclaredAnnotation(InstanceName.class);
 
