@@ -12,16 +12,8 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class SimpleContainer {
-    private static SimpleContainer INSTANCE;
     private final Map<String, Register<?>> typedRegistrations = new HashMap<>();
     private final Map<String, Object> resolvedSingletonInstances = new HashMap<>();
-
-    public synchronized static SimpleContainer getINSTANCE(){
-        if (INSTANCE == null){
-            INSTANCE = new SimpleContainer();
-        }
-        return INSTANCE;
-    }
 
     public synchronized <F> void registerInstance(F instance){
         typedRegistrations.put(instance.getClass().getName(),
