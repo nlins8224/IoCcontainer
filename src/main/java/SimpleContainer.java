@@ -11,20 +11,20 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class SimpleContainer {
-    private final Map<String, Register<?>> typedRegistrations = new HashMap<>();
+    private final Map<String, Register<?>> registeredTypes = new HashMap<>();
     private final Map<String, Object> resolvedSingletonInstances = new HashMap<>();
 
     public <F> void registerInstance(F instance){
-        typedRegistrations.put(instance.getClass().getName(),
+        registeredTypes.put(instance.getClass().getName(),
                 new Register.TypeInstanceRegister<>((Class<F>) instance.getClass(), instance));
     }
 
     public <F> void registerType(Class<F> type, boolean isSingleton){
-        this.typedRegistrations.put(type.getName(), new Register.TypeRegisterOne<>(type, isSingleton));
+        this.registeredTypes.put(type.getName(), new Register.TypeRegisterOne<>(type, isSingleton));
     }
 
     public <F, T extends F> void registerType(Class<F> from, Class<T> to, boolean isSingleton){
-        this.typedRegistrations.put(from.getName(), new Register.TypeRegister<>(from, to, isSingleton));
+        this.registeredTypes.put(from.getName(), new Register.TypeRegister<>(from, to, isSingleton));
     }
 
     public <T> T resolve(Class<T> type) throws Exception {
@@ -32,7 +32,7 @@ public class SimpleContainer {
     }
 
     public <T> T resolve(String name) throws Exception {
-        Register<?> register = typedRegistrations.get(name);
+        Register<?> register = registeredTypes.get(name);
 
         if (register == null) {
             throw new SimpleContainerException(name + " is not registered");
@@ -86,12 +86,9 @@ public class SimpleContainer {
                 throw new SimpleContainerException("No public constructors was found for type: " + type.getName());
             }
 
-
             List<Constructor> annotatedConstructors = Arrays.stream(declaredConstructors)
                     .filter(constructor -> constructor.getDeclaredAnnotation(DependencyConstructor.class) != null)
                     .collect(Collectors.toList());
-
-
 
             if (annotatedConstructors.isEmpty()){
                 return Arrays.stream(declaredConstructors)
